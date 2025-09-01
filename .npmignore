@@ -1,0 +1,35 @@
+# Ignore build configs & lockfiles
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+tsconfig.json
+vitest.config.*.ts
+vitest.config.ts
+
+# Ignore source maps if you don’t want to publish them
+*.map
+
+# Ignore tests & mocks
+__tests__/
+test/
+tests/
+*.test.ts
+*.spec.ts
+
+# Ignore coverage output
+coverage/
+
+# Ignore local dev configs
+.eslint*
+.prettier*
+.editorconfig
+.idea/
+.vscode/
+*.log
+
+# Ignore GitHub stuff
+.github/
+.gitignore
+
+# Ignore misc
+.DS_Store
