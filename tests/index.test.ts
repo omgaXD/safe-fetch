@@ -131,7 +131,7 @@ describe('safe-fetch', () => {
             mockFetch.mockResolvedValueOnce(new Response('{}', { status: 200 }));
 
             const api = createSafeFetch({
-                headers: { 'Authorization': 'Bearer token' }
+                headers: { Authorization: 'Bearer token' }
             });
             await api.get('/users');
 
@@ -139,7 +139,7 @@ describe('safe-fetch', () => {
                 expect.any(String),
                 expect.objectContaining({
                     headers: expect.objectContaining({
-                        'Authorization': 'Bearer token'
+                        Authorization: 'Bearer token'
                     })
                 })
             );
@@ -186,27 +186,35 @@ describe('safe-fetch', () => {
             expect(res.ok).toBe(true);
         });
 
+        // <-- ПЕРЕПИСАННЫЙ ТЕСТ
         it('respects Retry-After on 429', async () => {
-            vi.useFakeTimers();
+            // фейкаем таймеры + Date, чтобы CI не зависел от реального времени
+            vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
 
             mockFetch
                 .mockResolvedValueOnce(new Response('Too Many Requests', {
                     status: 429,
-                    headers: { 'Retry-After': '1' }
+                    headers: new Headers({ 'Retry-After': '1' })
                 }))
                 .mockResolvedValueOnce(new Response('{"ok": true}', { status: 200 }));
 
             const api = createSafeFetch({ retries: { retries: 2, baseDelayMs: 0 } });
             const promise = api.get('/rate');
 
+            await Promise.resolve();
+
             await vi.advanceTimersByTimeAsync(1000);
+
+            await vi.runOnlyPendingTimersAsync();
+            await Promise.resolve();
+
             const res = await promise;
 
             expect(res.ok).toBe(true);
             expect(mockFetch).toHaveBeenCalledTimes(2);
 
             vi.useRealTimers();
-        }, 15_000);
+        }, 5000);
 
         it('handles total timeout', async () => {
             vi.useFakeTimers();
