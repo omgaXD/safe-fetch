@@ -5,12 +5,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![npm](https://img.shields.io/npm/dm/@asouei/safe-fetch)](https://www.npmjs.com/package/@asouei/safe-fetch)
 [![Попробовать в CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-black?logo=codesandbox)](https://codesandbox.io/p/sandbox/fkw3z5)
+[![Awesome](https://awesome.re/badge-flat2.svg)](https://github.com/dzharii/awesome-typescript)
 
 *[English version](README.md) | Русская версия*
 
 > **Никогда больше не пишите `try/catch` для HTTP-запросов.** Ноль зависимостей • Не бросает исключения • Полный таймаут • Поддержка Retry-After
 
 Маленькая, типизированная обертка вокруг `fetch`, которая возвращает безопасные результаты, умно обрабатывает таймауты и повторяет запросы с экспоненциальным отступом.
+
+📌 Библиотека вошла в список [Awesome TypeScript](https://github.com/dzharii/awesome-typescript).
 
 ```typescript
 import { safeFetch } from '@asouei/safe-fetch';

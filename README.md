@@ -5,12 +5,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![npm](https://img.shields.io/npm/dm/@asouei/safe-fetch)](https://www.npmjs.com/package/@asouei/safe-fetch)
 [![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-black?logo=codesandbox)](https://codesandbox.io/p/sandbox/fkw3z5)
+[![Awesome](https://awesome.re/badge-flat2.svg)](https://github.com/dzharii/awesome-typescript)
 
 *English version | [Русская версия](README.ru.md)*
 
 > **Never write `try/catch` for HTTP requests again.** Zero-deps • No throws • Total timeout • Retry-After support
 
 Tiny, typed wrapper around `fetch` that returns safe results, handles timeouts intelligently, and retries with exponential backoff.
+
+📌 Featured in [Awesome TypeScript](https://github.com/dzharii/awesome-typescript).
 
 ```typescript
 import { safeFetch } from '@asouei/safe-fetch';
