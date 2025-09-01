@@ -1,5 +1,10 @@
 # @asouei/safe-fetch
 
+[![npm version](https://img.shields.io/npm/v/@asouei/safe-fetch.svg)](https://www.npmjs.com/package/@asouei/safe-fetch)
+[![CI](https://github.com/asouei/safe-fetch/actions/workflows/ci.yml/badge.svg)](https://github.com/asouei/safe-fetch/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Попробовать в CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-black?logo=codesandbox)](https://codesandbox.io/p/sandbox/fkw3z5)
+
 *[English version](README.md) | Русская версия*
 
 > **Никогда больше не пишите `try/catch` для HTTP-запросов.** Ноль зависимостей • Не бросает исключения • Полный таймаут • Поддержка Retry-After
@@ -443,7 +448,7 @@ if (!result.ok) {
 ## Песочница
 
 Попробуйте safe-fetch онлайн с готовыми примерами:  
-**CodeSandbox:** [Открыть интерактивное демо](https://codesandbox.io/s/safe-fetch-demo) _(ссылка доступна после публикации пакета)_
+**CodeSandbox:** [Открыть интерактивное демо](https://codesandbox.io/p/sandbox/fkw3z5)
 
 ## Дорожная карта
 

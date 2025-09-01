@@ -1,5 +1,10 @@
 # @asouei/safe-fetch
 
+[![npm version](https://img.shields.io/npm/v/@asouei/safe-fetch.svg)](https://www.npmjs.com/package/@asouei/safe-fetch)
+[![CI](https://github.com/asouei/safe-fetch/actions/workflows/ci.yml/badge.svg)](https://github.com/asouei/safe-fetch/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-black?logo=codesandbox)](https://codesandbox.io/p/sandbox/fkw3z5)
+
 *English version | [Русская версия](README.ru.md)*
 
 > **Never write `try/catch` for HTTP requests again.** Zero-deps • No throws • Total timeout • Retry-After support
@@ -443,7 +448,7 @@ if (!result.ok) {
 ## Playground
 
 Try safe-fetch online with ready-to-run examples:  
-**CodeSandbox:** [Open Interactive Demo](https://codesandbox.io/s/safe-fetch-demo) _(link available after package publication)_
+**CodeSandbox:** [Open Interactive Demo](https://codesandbox.io/p/sandbox/fkw3z5)
 
 ## Roadmap
 
