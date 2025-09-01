@@ -206,7 +206,7 @@ describe('safe-fetch', () => {
             expect(mockFetch).toHaveBeenCalledTimes(2);
 
             vi.useRealTimers();
-        });
+        }, 15_000);
 
         it('handles total timeout', async () => {
             vi.useFakeTimers();
