@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createSafeFetch, safeFetch } from '../src';
+import { isError, isSuccess } from './type-guards';
 
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
@@ -26,7 +27,7 @@ describe('safe-fetch', () => {
             const res = await api.get<{ hello: string }>('/hello');
 
             expect(res.ok).toBe(true);
-            if (res.ok) {
+            if (isSuccess(res)) {
                 expect(res.data.hello).toBe('world');
                 expect(res.response.status).toBe(200);
             }
@@ -41,7 +42,7 @@ describe('safe-fetch', () => {
             const res = await api.get('/error');
 
             expect(res.ok).toBe(false);
-            if (!res.ok) {
+            if (isError(res)) {
                 expect(res.error.name).toBe('HttpError');
                 expect((res.error as any).status).toBe(500);
                 expect(res.response?.status).toBe(500);
@@ -55,7 +56,7 @@ describe('safe-fetch', () => {
             const res = await api.get('/fail');
 
             expect(res.ok).toBe(false);
-            if (!res.ok) {
+            if (isError(res)) {
                 expect(res.error.name).toBe('NetworkError');
                 expect(res.error.message).toBe('Network request failed');
             }
@@ -66,7 +67,7 @@ describe('safe-fetch', () => {
         it('GET method works', async () => {
             mockFetch.mockResolvedValueOnce(new Response('{"data": "get"}', { status: 200 }));
 
-            const res = await safeFetch.get('/test');
+            await safeFetch.get('/test');
             expect(mockFetch).toHaveBeenCalledWith(
                 expect.stringContaining('/test'),
                 expect.objectContaining({ method: 'GET' })
@@ -77,7 +78,7 @@ describe('safe-fetch', () => {
             mockFetch.mockResolvedValueOnce(new Response('{"data": "post"}', { status: 200 }));
 
             const body = { name: 'test' };
-            const res = await safeFetch.post('/test', body);
+            await safeFetch.post('/test', body);
 
             expect(mockFetch).toHaveBeenCalledWith(
                 expect.stringContaining('/test'),
@@ -94,7 +95,7 @@ describe('safe-fetch', () => {
         it('DELETE method works', async () => {
             mockFetch.mockResolvedValueOnce(new Response(null, { status: 204 }));
 
-            const res = await safeFetch.delete('/test/123');
+            await safeFetch.delete('/test/123');
             expect(mockFetch).toHaveBeenCalledWith(
                 expect.stringContaining('/test/123'),
                 expect.objectContaining({ method: 'DELETE' })
@@ -177,7 +178,7 @@ describe('safe-fetch', () => {
             const api = createSafeFetch({
                 retries: {
                     retries: 2,
-                    retryOn: ({ response }) => response?.status === 500
+                    retryOn: (ctx: any) => ctx.response?.status === 500
                 }
             });
             const res = await api.post('/test', { data: 'test' });
@@ -186,9 +187,7 @@ describe('safe-fetch', () => {
             expect(res.ok).toBe(true);
         });
 
-        // <-- ПЕРЕПИСАННЫЙ ТЕСТ
         it('respects Retry-After on 429', async () => {
-            // фейкаем таймеры + Date, чтобы CI не зависел от реального времени
             vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
 
             mockFetch
@@ -202,9 +201,7 @@ describe('safe-fetch', () => {
             const promise = api.get('/rate');
 
             await Promise.resolve();
-
             await vi.advanceTimersByTimeAsync(1000);
-
             await vi.runOnlyPendingTimersAsync();
             await Promise.resolve();
 
@@ -228,7 +225,7 @@ describe('safe-fetch', () => {
             const res = await promise;
 
             expect(res.ok).toBe(false);
-            if (!res.ok) {
+            if (isError(res)) {
                 expect(res.error.name).toBe('TimeoutError');
                 expect(res.error.message).toContain('timed out after 2000 ms');
             }
@@ -240,14 +237,14 @@ describe('safe-fetch', () => {
     describe('error handling', () => {
         it('normalizes different error types', async () => {
             mockFetch.mockRejectedValueOnce(new TypeError('Failed to fetch'));
-            let res = await safeFetch.get('/test');
-            expect(res.ok).toBe(false);
-            if (!res.ok) expect(res.error.name).toBe('NetworkError');
+            const networkRes = await safeFetch.get('/test');
+            expect(networkRes.ok).toBe(false);
+            if (isError(networkRes)) expect(networkRes.error.name).toBe('NetworkError');
 
             mockFetch.mockResolvedValueOnce(new Response('Not found', { status: 404 }));
-            res = await safeFetch.get('/test');
-            expect(res.ok).toBe(false);
-            if (!res.ok) expect(res.error.name).toBe('HttpError');
+            const httpRes = await safeFetch.get('/test');
+            expect(httpRes.ok).toBe(false);
+            if (isError(httpRes)) expect(httpRes.error.name).toBe('HttpError');
         });
     });
 
@@ -266,7 +263,7 @@ describe('safe-fetch', () => {
 
             const res = await safeFetch.get('/user', { validate });
             expect(res.ok).toBe(true);
-            if (res.ok) {
+            if (isSuccess(res)) {
                 expect(res.data.id).toBe(1);
                 expect(res.data.name).toBe('test');
             }
@@ -286,7 +283,7 @@ describe('safe-fetch', () => {
 
             const res = await safeFetch.get('/user', { validate });
             expect(res.ok).toBe(false);
-            if (!res.ok) {
+            if (isError(res)) {
                 expect(res.error.name).toBe('ValidationError');
                 expect(res.error.message).toBe('Validation failed');
             }

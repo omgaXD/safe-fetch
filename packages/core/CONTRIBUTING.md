@@ -16,7 +16,7 @@ Thanks for your interest in contributing! We welcome issues, discussions, and pu
    ```
 4. **Run tests** to make sure everything works:
    ```bash
-   pnpm -r test
+   pnpm test
    ```
 
 ## Development Workflow
@@ -36,11 +36,15 @@ Thanks for your interest in contributing! We welcome issues, discussions, and pu
 ### Before Submitting
 1. **Run the test suite**:
    ```bash
-   pnpm -r test
+   pnpm test
    ```
 2. **Check TypeScript compilation**:
    ```bash
-   pnpm -r build
+   pnpm build
+   ```
+3. **Ensure code formatting**:
+   ```bash
+   pnpm format
    ```
 
 ## Submitting Changes
@@ -52,7 +56,7 @@ For significant changes, please [open an issue](../../issues/new) first to discu
 - API modifications
 
 ### Pull Request Process
-1. **Create a feature branch** from `master`:
+1. **Create a feature branch** from `main`:
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -72,42 +76,20 @@ For significant changes, please [open an issue](../../issues/new) first to discu
 
 ### CI Requirements
 All pull requests must pass:
-- ✅ TypeScript compilation (`pnpm -r build`)
-- ✅ Test suite (`pnpm -r test`)
-- ✅ Linting (`pnpm -r lint`)
+- ✅ TypeScript compilation (`pnpm build`)
+- ✅ Test suite (`pnpm test`)
+- ✅ Linting (`pnpm lint`)
 - ✅ No conflicting dependencies
 
-## Project Structure (Monorepo)
+## Project Structure
 
 ```
-packages/
-├── core/                    # @asouei/safe-fetch
-│   ├── src/
-│   │   ├── index.ts        # Main export and createSafeFetch  
-│   │   ├── types.ts        # TypeScript definitions
-│   │   ├── errors.ts       # Error constructors and utilities
-│   │   └── type-guards.ts        # Helper functions
-│   ├── tests/              # Test files
-│   └── package.json
-└── react-query/            # @asouei/safe-fetch-react-query
-    ├── src/
-    └── package.json
-```
-
-## Working on Core Library
-
-```bash
-cd packages/core
-pnpm build
-pnpm test
-```
-
-## Working on React Query Adapter
-
-```bash
-cd packages/react-query
-pnpm build
-pnpm test
+src/
+├── index.ts          # Main export and createSafeFetch
+├── types.ts          # TypeScript definitions
+├── errors.ts         # Error constructors and utilities  
+├── type-guards.ts          # Helper functions
+└── __tests__/        # Test files
 ```
 
 ## Common Contribution Areas
