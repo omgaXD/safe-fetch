@@ -351,6 +351,8 @@ const api = createSafeFetch({
       init.headers = headers;
       
       console.log(`→ ${init.method} ${url}`);
+
+      return { input: url, init }
     },
     
     onResponse: (response) => {
