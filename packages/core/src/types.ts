@@ -45,9 +45,15 @@ export type ValidateResult<T> =
     | { success: false; error: NormalizedError | unknown };
 
 export interface Interceptors {
-    onRequest?: (input: RequestInfo, init: RequestInit & { url: string }) => Promise<void> | void;
-    onResponse?: (response: Response) => Promise<void> | void;
-    onError?: (error: NormalizedError) => Promise<void> | void;
+	onRequest?: (
+		input: RequestInfo,
+		init: RequestInit & { url: string }
+	) =>
+		| Promise<{ input: RequestInfo; init: RequestInit & { url: string } } | void>
+		| { input: RequestInfo; init: RequestInit & { url: string } }
+		| void;
+	onResponse?: (response: Response) => Promise<void> | void;
+	onError?: (error: NormalizedError) => Promise<void> | void;
 }
 
 export type SafeResult<T> =
