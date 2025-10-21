@@ -17,9 +17,9 @@ export * from './errors';
 export function createSafeFetch(base: SafeFetchBaseConfig = {}): SafeFetcher {
     const defaultParseAs: ParseAs = base.parseAs ?? 'json';
 
-    async function core<TOut = unknown>(
+    async function core<TOut = unknown, TBody extends object = any>(
         url: string,
-        init: SafeFetchRequest<TOut> = {}
+        init: SafeFetchRequest<TOut, TBody> = {}
     ): Promise<SafeResult<TOut>> {
         let totalTimedOut = false;
         const method = (init.method ?? 'GET').toUpperCase() as HttpMethod;
@@ -222,9 +222,13 @@ export function createSafeFetch(base: SafeFetchBaseConfig = {}): SafeFetcher {
     const api = core as SafeFetcher;
     api.get = (url, init) => core(url, { ...init, method: 'GET' });
     api.delete = (url, init) => core(url, { ...init, method: 'DELETE' });
-    api.post = (url, body, init) => core(url, { ...(init ?? {}), method: 'POST', body: body as any });
-    api.put = (url, body, init) => core(url, { ...(init ?? {}), method: 'PUT', body: body as any });
-    api.patch = (url, body, init) => core(url, { ...(init ?? {}), method: 'PATCH', body: body as any });
+
+    api.post = <TOut, TBody extends object = any>(url: string, body: TBody | undefined, init: SafeFetchRequest<TOut>) => 
+        core<TOut, TBody>(url, { ...(init ?? {}), method: 'POST', body: body });
+    api.put = <TOut, TBody extends object = any>(url: string, body: TBody | undefined, init: SafeFetchRequest<TOut>) => 
+        core<TOut, TBody>(url, { ...(init ?? {}), method: 'PUT', body: body });
+    api.patch = <TOut, TBody extends object = any>(url: string, body: TBody | undefined, init: SafeFetchRequest<TOut>) => 
+        core<TOut, TBody>(url, { ...(init ?? {}), method: 'PATCH', body: body });
 
     return api;
 }
