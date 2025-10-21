@@ -92,6 +92,29 @@ describe('safe-fetch', () => {
             );
         });
 
+        it('POST method works with typed body', async () => {
+            mockFetch.mockResolvedValueOnce(new Response('{"data": "post"}', { status: 200 }));
+            
+            interface PostBody {
+                id: number;
+                name: string;
+            }
+
+            const body = { id: 1, name: 'typed' };
+            await safeFetch.post<{data: string}, PostBody>('/test', body);
+
+            expect(mockFetch).toHaveBeenCalledWith(
+                expect.stringContaining('/test'),
+                expect.objectContaining({
+                    method: 'POST',
+                    body: JSON.stringify(body),
+                    headers: expect.objectContaining({
+                        'Content-Type': 'application/json'
+                    })
+                })
+            );
+        });
+
         it('DELETE method works', async () => {
             mockFetch.mockResolvedValueOnce(new Response(null, { status: 204 }));
 

@@ -66,9 +66,9 @@ export interface SafeFetchBaseConfig {
     interceptors?: Interceptors;
 }
 
-export interface SafeFetchRequest<TOut> extends Omit<RequestInit, 'body' | 'method'> {
+export interface SafeFetchRequest<TOut, TBody extends object = any> extends Omit<RequestInit, 'body' | 'method'> {
     method?: HttpMethod;
-    body?: BodyInit | object | null;
+    body?: (BodyInit | TBody | null | undefined);
     query?: Record<string, string | number | boolean | undefined>;
     parseAs?: ParseAs;
     validate?: (raw: unknown) => ValidateResult<TOut>;
@@ -78,11 +78,11 @@ export interface SafeFetchRequest<TOut> extends Omit<RequestInit, 'body' | 'meth
 }
 
 export interface SafeFetcher {
-    <TOut = unknown>(url: string, init?: SafeFetchRequest<TOut>): Promise<SafeResult<TOut>>;
+    <TOut = unknown, TBody extends object = any>(url: string, init?: SafeFetchRequest<TOut, TBody>): Promise<SafeResult<TOut>>;
 
     get<TOut = unknown>(url: string, init?: SafeFetchRequest<TOut>): Promise<SafeResult<TOut>>;
-    post<TOut = unknown>(url: string, body?: unknown, init?: SafeFetchRequest<TOut>): Promise<SafeResult<TOut>>;
-    put<TOut = unknown>(url: string, body?: unknown, init?: SafeFetchRequest<TOut>): Promise<SafeResult<TOut>>;
-    patch<TOut = unknown>(url: string, body?: unknown, init?: SafeFetchRequest<TOut>): Promise<SafeResult<TOut>>;
+    post<TOut = unknown, TBody extends object = any>(url: string, body?: TBody, init?: SafeFetchRequest<TOut>): Promise<SafeResult<TOut>>;
+    put<TOut = unknown, TBody extends object = any>(url: string, body?: TBody, init?: SafeFetchRequest<TOut>): Promise<SafeResult<TOut>>;
+    patch<TOut = unknown, TBody extends object = any>(url: string, body?: TBody, init?: SafeFetchRequest<TOut>): Promise<SafeResult<TOut>>;
     delete<TOut = unknown>(url: string, init?: SafeFetchRequest<TOut>): Promise<SafeResult<TOut>>;
 }
