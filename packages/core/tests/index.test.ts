@@ -327,6 +327,12 @@ describe('safe-fetch', () => {
                 interceptors: {
                     async onRequest(input, init) {
                         intercepted = true;
+
+                        // modifying `init` is a no-op
+                        init.headers = {
+                            ...init.headers,
+                            'X-Should-Not-Exist': 'Nope'
+                        };
                     }
                 }
             });
@@ -334,6 +340,14 @@ describe('safe-fetch', () => {
             await api.get('/test');
 
             expect(intercepted).toBe(true);
+            expect(mockFetch).toHaveBeenCalledWith(
+                expect.any(String),
+                expect.not.objectContaining({
+                    headers: expect.objectContaining({
+                        'X-Should-Not-Exist': 'Nope'
+                    })
+                })
+            );
         });
 
         it('intercepts response', async () => {
