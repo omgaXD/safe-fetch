@@ -86,6 +86,7 @@ const { safeFetch, createSafeFetch } = require('@asouei/safe-fetch');
 
 ```typescript
 type Todo = { id: number; title: string; completed: boolean };
+type PostTodo = { title: string; completed: boolean }; // optional body type checking
 
 const api = createSafeFetch({
   baseURL: 'https://jsonplaceholder.typicode.com',
@@ -97,7 +98,7 @@ const api = createSafeFetch({
 const list = await api.get<Todo[]>('/todos', { query: { _limit: 3 } });
 if (list.ok) console.log('todos:', list.data.map(t => t.title));
 
-const create = await api.post<Todo>('/todos', { title: 'Learn safe-fetch', completed: false });
+const create = await api.post<Todo, PostTodo>('/todos', { title: 'Learn safe-fetch', completed: false });
 if (!create.ok) console.warn('create failed:', create.error);
 ```
 

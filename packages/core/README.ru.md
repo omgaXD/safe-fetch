@@ -87,6 +87,7 @@ const { safeFetch, createSafeFetch } = require('@asouei/safe-fetch');
 
 ```typescript
 type Todo = { id: number; title: string; completed: boolean };
+type PostTodo = { title: string; completed: boolean }; // необязательная проверка типа тела запроса
 
 const api = createSafeFetch({
   baseURL: 'https://jsonplaceholder.typicode.com',
@@ -98,7 +99,7 @@ const api = createSafeFetch({
 const list = await api.get<Todo[]>('/todos', { query: { _limit: 3 } });
 if (list.ok) console.log('todos:', list.data.map(t => t.title));
 
-const create = await api.post<Todo>('/todos', { title: 'Изучить safe-fetch', completed: false });
+const create = await api.post<Todo, PostTodo>('/todos', { title: 'Изучить safe-fetch', completed: false });
 if (!create.ok) console.warn('создание не удалось:', create.error);
 ```
 
