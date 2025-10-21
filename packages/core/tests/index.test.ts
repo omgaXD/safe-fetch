@@ -289,4 +289,51 @@ describe('safe-fetch', () => {
             }
         });
     });
+
+    describe('interceptors', () => {
+        it('modifies request in interceptor', async () => {
+            mockFetch.mockResolvedValueOnce(new Response('{"data": "intercepted"}', { status: 200 }));
+
+            const api = createSafeFetch({
+                interceptors: {
+                    onRequest(input, init) {
+                        init.headers = {
+                            ...init.headers,
+                            'X-Custom-Header': 'CustomValue'
+                        };
+                        return { input, init } as any;
+                    }
+                }
+            });
+
+            await api.get('/test');
+
+            expect(mockFetch).toHaveBeenCalledWith(
+                expect.any(String),
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        'X-Custom-Header': 'CustomValue'
+                    })
+                })
+            );
+        });
+
+        it('intercepts response', async () => {
+            mockFetch.mockResolvedValueOnce(new Response('{"data": "original"}', { status: 200 }));
+
+            let intercepted = false;
+
+            const api = createSafeFetch({
+                interceptors: {
+                    async onResponse(response) {
+                        intercepted = true;
+                    }
+                }
+            });
+
+            await api.get('/test');
+
+            expect(intercepted).toBe(true);
+        });
+    });
 });
