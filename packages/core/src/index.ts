@@ -105,7 +105,11 @@ export function createSafeFetch(base: SafeFetchBaseConfig = {}): SafeFetcher {
                 if (init.keepalive) reqInit.keepalive = init.keepalive;
                 if (init.mode) reqInit.mode = init.mode;
 
-                await base.interceptors?.onRequest?.(targetUrl, { ...reqInit, url: targetUrl });
+                const modified = await base.interceptors?.onRequest?.(targetUrl, { ...reqInit, url: targetUrl });
+                if (modified) {
+                    url = modified.input as string;
+                    Object.assign(reqInit, modified.init);
+                }
 
                 const fetchPromise = fetch(targetUrl, reqInit);
                 const abortPromise =
