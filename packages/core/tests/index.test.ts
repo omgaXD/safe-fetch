@@ -318,6 +318,24 @@ describe('safe-fetch', () => {
             );
         });
 
+        it('intercepts request without modification correctly', async () => {
+            mockFetch.mockResolvedValueOnce(new Response('{"data": "original"}', { status: 200 }));
+
+            let intercepted = false;
+
+            const api = createSafeFetch({
+                interceptors: {
+                    async onRequest(input, init) {
+                        intercepted = true;
+                    }
+                }
+            });
+
+            await api.get('/test');
+
+            expect(intercepted).toBe(true);
+        });
+
         it('intercepts response', async () => {
             mockFetch.mockResolvedValueOnce(new Response('{"data": "original"}', { status: 200 }));
 
